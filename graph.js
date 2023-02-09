@@ -60,25 +60,46 @@ class Graph {
   }
 
   /** traverse graph with DFS and returns array of Node values */
-  depthFirstSearch(start, seen = new Set(start.value)) {
+  depthFirstSearch(start, seen = new Set([start]), values = [start.value]) {
 
     for (let neighbor of start.adjacent) {
-      console.log("neighbor", neighbor)
       if (!seen.has(neighbor)) {
-        seen.add(neighbor.value);
-        seen = this.depthFirstSearch(neighbor, seen);
+        seen.add(neighbor);
+        values.push(neighbor.value)
+        this.depthFirstSearch(neighbor, seen, values);
       }
     }
-
-    console.log("seen", seen)
-    return Array.from(seen);
+    console.log({values});
+    return values;
   }
 
   /** traverse graph with BDS and returns array of Node values */
-  breadthFirstSearch(start) { }
+  breadthFirstSearch(start) {
+    let toVisitQueue = [start];
+    let nodeValues = [start.value];
+    let seen = new Set(toVisitQueue);
+
+    while (toVisitQueue.length > 0) {
+      console.log({toVisitQueue})
+      let current = toVisitQueue.shift();
+      console.log({toVisitQueue})
+      for (const neighbor of current.adjacent) {
+        if (!seen.has(neighbor)) {
+          toVisitQueue.push(neighbor);
+          nodeValues.push(neighbor.value);
+          seen.add(neighbor);
+        }
+      }
+    }
+
+    return nodeValues
+  }
+
 
   /** find the distance of the shortest path from the start vertex to the end vertex */
-  distanceOfShortestPath(start, end) { }
+  distanceOfShortestPath(start, end) {
+    
+   }
 }
 
 module.exports = { Graph, Node }
